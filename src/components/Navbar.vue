@@ -9,7 +9,7 @@ const links = [
   { name: 'About', href: '#about' },
   { name: 'Services', href: '#services' },
   { name: 'Capabilities', href: '#capabilities' },
-  { name: 'Portfolio', href: '#portfolio' },
+  { name: 'Portofolio', href: '#portfolio' },
   { name: 'Awards', href: '#awards' }
 ]
 </script>
@@ -17,10 +17,14 @@ const links = [
 <template>
   <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-4xl transition-all duration-300">
     <nav class="bg-[#111]/80 backdrop-blur-xl border border-[#333] px-6 py-3 rounded-full flex justify-between items-center shadow-[0_-10px_40px_rgba(0,0,0,0.5)] relative z-10">
-      <!-- Logo -->
-      <Magnetic>
-        <a href="#" class="font-heading text-xl md:text-2xl tracking-widest uppercase cursor-pointer text-secondary">HKM.</a>
-      </Magnetic>
+      
+      <!-- Logo Image -->
+      
+        <a href="#hero">
+          <!-- Ganti src dengan path logo Anda -->
+          <img src="/public/favicon_hikam.webp" alt="Logo" class="h-6 md:h-8 w-auto object-contain" />
+        </a>
+      
       
       <!-- Desktop Links -->
       <div class="hidden md:flex gap-6 lg:gap-8 text-[0.65rem] lg:text-xs uppercase tracking-widest font-body font-medium text-[#aaa]">

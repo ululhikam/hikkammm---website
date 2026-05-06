@@ -28,6 +28,6 @@ onMounted(() => {
 <template>
   <div ref="loadingWrapper" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-primary text-secondary">
     <div class="text-8xl font-heading">{{ progress }}%</div>
-    <div class="mt-4 text-accent uppercase tracking-widest text-sm font-body">Loading Experience</div>
+    <div class="mt-4 text-accent uppercase tracking-widest text-sm font-body">thinking...</div>
   </div>
 </template>

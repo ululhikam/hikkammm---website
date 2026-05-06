@@ -2,6 +2,22 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import Magnetic from '../components/Magnetic.vue'
 
+const socialLinks = [
+  { name: 'Instagram', url: 'https://instagram.com/hikkammm_' }, // Ganti dengan link aslimu
+  // { name: 'LinkedIn', url: 'https://linkedin.com/in/username-kamu' },
+  { name: 'GitHub', url: 'https://github.com/hikkkammmm' },
+  { name: 'WhatsApp', url: 'https://wa.me/6285211435617' }
+]
+
+const navLinks = [
+  { name: 'Portfolio', url: '#portfolio' },
+  { name: 'About', url: '#about' },
+  { name: 'Services', url: '#services' },
+  { name: 'Capabilities', url: '#capabilities' },
+  { name: 'Awards', url: '#awards' }
+  // { name: 'Contact', url: '#kontak' }
+]
+
 // Untuk menampilkan waktu lokal di footer
 const time = ref('')
 let timer: ReturnType<typeof setInterval>
@@ -33,23 +49,14 @@ onUnmounted(() => {
       
       <!-- Left Column: CTA -->
       <div class="lg:col-span-8 flex flex-col items-start">
-        <!-- Availability Badge -->
-        <!-- <div class="flex items-center gap-3 mb-8 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm w-fit">
-          <span class="relative flex h-2 w-2">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-          </span>
-          <span class="text-xs font-body uppercase tracking-[0.2em] text-gray-300">Available for freelance</span>
-        </div> -->
-
         <h2 class="text-5xl md:text-7xl lg:text-[5.5rem] font-heading uppercase leading-[1.1] mb-10 text-gray-100 tracking-tight">
           Got a project? <br />
           <span class="text-gray-400 italic font-light">Let's Talk.</span>
         </h2>
         
         <Magnetic>
-          <a href="mailto:hello@hikam.dev" class="group inline-flex items-center justify-center gap-4 bg-white text-black font-heading text-lg md:text-2xl uppercase px-10 py-5 rounded-full hover:bg-gray-200 transition-all duration-300 hover:scale-105 active:scale-95">
-            <span>hello@hikam.dev</span>
+          <a href="mailto:cemengsableng@gmail.com" class="group inline-flex items-center justify-center gap-4 bg-white text-black font-heading text-lg md:text-2xl uppercase px-10 py-5 rounded-full hover:bg-gray-200 transition-all duration-300 hover:scale-105 active:scale-95">
+            <span>cemengsableng@gmail.com</span>
             <svg class="w-6 h-6 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
@@ -62,11 +69,13 @@ onUnmounted(() => {
         <!-- Socials -->
         <div class="flex flex-col gap-6">
           <h4 class="text-gray-500 font-bold mb-4 text-xs">Socials</h4>
-          <template v-for="link in ['Instagram', 'LinkedIn', 'GitHub']" :key="link">
+          <!-- Ubah v-for di sini -->
+          <template v-for="item in socialLinks" :key="item.name">
             <Magnetic>
-              <a href="#" class="group flex items-center w-fit text-gray-300 hover:text-white transition-colors duration-300">
+              <!-- Tambahkan :href="item.url" dan target="_blank" agar buka di tab baru -->
+              <a :href="item.url" target="_blank" rel="noopener noreferrer" class="group flex items-center w-fit text-gray-300 hover:text-white transition-colors duration-300">
                 <span class="relative overflow-hidden pb-1">
-                  {{ link }}
+                  {{ item.name }}
                   <span class="absolute bottom-0 left-0 w-full h-[1px] bg-white translate-x-[-105%] group-hover:translate-x-0 transition-transform duration-300 ease-out"></span>
                 </span>
                 <svg class="w-3.5 h-3.5 ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -80,41 +89,28 @@ onUnmounted(() => {
         <!-- Navigation -->
         <div class="flex flex-col gap-6">
           <h4 class="text-gray-500 font-bold mb-4 text-xs">Menu</h4>
-          <template v-for="link in ['Work', 'About', 'Contact']" :key="link">
+          <!-- Ubah v-for di sini -->
+          <template v-for="item in navLinks" :key="item.name">
             <Magnetic>
-              <a :href="`#${link.toLowerCase()}`" class="group flex items-center w-fit text-gray-300 hover:text-white transition-colors duration-300">
+              <!-- Tambahkan :href="item.url" -->
+              <a :href="item.url" class="group flex items-center w-fit text-gray-300 hover:text-white transition-colors duration-300">
                 <span class="relative overflow-hidden pb-1">
-                  {{ link }}
+                  {{ item.name }}
                   <span class="absolute bottom-0 left-0 w-full h-[1px] bg-white translate-x-[-105%] group-hover:translate-x-0 transition-transform duration-300 ease-out"></span>
                 </span>
               </a>
             </Magnetic>
           </template>
-        </div>
-      </div>
-    </div>
-
-    <!-- Massive Footer Text (Outline Style) -->
-    <div class="w-full flex justify-center items-center overflow-hidden z-0 py-10 pointer-events-none select-none">
-      <h1 class="text-[22vw] font-heading font-black uppercase leading-none text-transparent whitespace-nowrap" style="-webkit-text-stroke: 1px rgba(255, 255, 255, 0.15);">
-        HIKAM
-      </h1>
+        </div>      </div>
     </div>
 
     <!-- Bottom Copyright Bar -->
     <div class="max-w-7xl mx-auto w-full flex flex-col md:flex-row justify-between items-center text-[10px] sm:text-xs font-body text-gray-500 uppercase tracking-[0.2em] mt-auto z-10 border-t border-white/10 pt-8">
       <div class="flex items-center gap-6 mb-4 md:mb-0">
-        <span>© {{ new Date().getFullYear() }} Hikam.</span>
+        <span>© {{ new Date().getFullYear() }}</span>
         <span class="hidden sm:inline-block w-1 h-1 rounded-full bg-gray-600"></span>
         <span class="hidden sm:inline-block">Yogyakarta, {{ time || 'Loading...' }}</span>
       </div>
-      
-      <!-- <div class="flex items-center gap-2 group cursor-pointer hover:text-gray-300 transition-colors">
-        <span>Made with</span>
-        <span class="text-emerald-500">Vue</span>
-        <span>&</span>
-        <span class="text-green-400">GSAP</span>
-      </div> -->
     </div>
   </footer>
 </template>

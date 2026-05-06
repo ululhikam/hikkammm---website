@@ -78,29 +78,29 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <section ref="heroWrapper" class="h-[100dvh] w-full relative overflow-hidden flex flex-col items-center justify-center bg-primary" style="perspective: 1000px;">
+  <section id="hero" ref="heroWrapper" class="h-[100dvh] w-full relative overflow-hidden flex flex-col items-center justify-center bg-primary" style="perspective: 1000px;">
     
-    <!-- Profile/Abstract Image: Diperbesar dan ditarik sedikit ke bawah agar tertimpa teks -->
+    <!-- Profile/Abstract Image: Dinaikkan ke top-[10vh] di mobile agar menjauh dari teks -->
     <div :ref="el => { if(el) floaters.push(el as HTMLElement) }" 
          class="absolute z-0
-                top-[18vh] left-1/2 -translate-x-1/2 
+                top-[10vh] left-1/2 -translate-x-1/2 
                 md:top-[20%] md:left-[10%] md:translate-x-0 
                 w-48 h-48 sm:w-56 sm:h-56 md:w-48 md:h-48 
                 rounded-full overflow-hidden filter grayscale contrast-125">
        <img src="@/assets/hikam.webp" class="w-full h-full object-cover" alt="Creative abstract" />
     </div>
 
-    <!-- Massive Anti-Mainstream Text: Dibuat lebih rapat dan saling mengunci (Interlocking) -->
-    <div ref="mainText" class="relative z-10 flex flex-col transform-style-3d pointer-events-none mix-blend-difference w-full px-4 mt-[10vh] md:mt-0">
+    <!-- Massive Anti-Mainstream Text: Diturunkan sedikit ke mt-[18vh] di mobile agar memberi ruang untuk foto di atasnya -->
+    <div ref="mainText" class="relative z-10 flex flex-col transform-style-3d pointer-events-none mix-blend-difference w-full px-4 mt-[18vh] md:mt-0">
       <div class="overflow-hidden w-full flex justify-start md:justify-center">
-         <h1 class="hero-text-line text-[26vw] md:text-[15vw] leading-[0.75] md:leading-[0.8] font-heading text-secondary uppercase tracking-tighter m-0 ml-[4vw] md:-ml-[10vw]">Creative</h1>
+         <h1 class="hero-text-line text-[26vw] md:text-[15vw] leading-[0.75] md:leading-[0.8] font-heading text-secondary uppercase tracking-tighter m-0 ml-[4vw] md:-ml-[10vw]">Developer</h1>
       </div>
       <div class="overflow-hidden w-full flex justify-start md:justify-center">
          <!-- Pada mobile didorong ke kanan agar mengisi ruang kosong -->
-         <h1 class="hero-text-line text-[26vw] md:text-[15vw] leading-[0.75] md:leading-[0.8] font-heading text-secondary uppercase tracking-tighter m-0 ml-[28vw] md:ml-[15vw]">Promt<span class="text-accent italic">&nbsp;AI</span></h1>
+         <h1 class="hero-text-line text-[26vw] md:text-[15vw] leading-[0.75] md:leading-[0.8] font-heading text-secondary uppercase tracking-tighter m-0 ml-[28vw] md:ml-[15vw]">Data<span class="text-accent italic">&nbsp;&</span></h1>
       </div>
       <div class="overflow-hidden w-full flex justify-start md:justify-center">
-         <h1 class="hero-text-line text-[26vw] md:text-[15vw] leading-[0.75] md:leading-[0.8] font-heading text-secondary uppercase tracking-tighter m-0 ml-[8vw] md:-ml-[5vw]">Engineer</h1>
+         <h1 class="hero-text-line text-[26vw] md:text-[15vw] leading-[0.75] md:leading-[0.8] font-heading text-secondary uppercase tracking-tighter m-0 ml-[8vw] md:-ml-[5vw]">Scientist</h1>
       </div>
     </div>
     
