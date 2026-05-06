@@ -107,7 +107,7 @@ onUnmounted(() => {
     <!-- Available Badge: Disesuaikan agar mengisi gap di sebelah kanan-bawah teks -->
     <div :ref="el => { if(el) floaters.push(el as HTMLElement) }" class="absolute top-[48vh] right-[4vw] md:top-auto md:bottom-[25%] md:right-[15%] w-20 h-20 md:w-32 md:h-32 flex items-center justify-center border border-accent rounded-full border-dashed z-20">
        <div class="absolute inset-0 animate-[spin_10s_linear_infinite] border border-secondary rounded-full border-dashed opacity-50"></div>
-       <span class="text-[0.45rem] md:text-xs font-body text-secondary uppercase tracking-widest text-center leading-tight">Available<br/>For Work</span>
+       <span class="text-[0.45rem] md:text-xs font-body text-secondary uppercase tracking-widest text-center leading-tight">Available<br/>Collaboration</span>
     </div>
     
     <!-- Descriptive Text: Ditampilkan di mobile agar layar bawah tidak kosong -->
@@ -118,10 +118,10 @@ onUnmounted(() => {
     </div>
     
     <!-- Location -->
-    <div :ref="el => { if(el) floaters.push(el as HTMLElement) }" class="absolute bottom-[8%] left-[6vw] md:bottom-[10%] md:left-[5%] flex items-center gap-3 z-20 mix-blend-difference">
+    <!-- <div :ref="el => { if(el) floaters.push(el as HTMLElement) }" class="absolute bottom-[8%] left-[6vw] md:bottom-[10%] md:left-[5%] flex items-center gap-3 z-20 mix-blend-difference">
        <div class="w-8 md:w-12 h-[1px] bg-secondary"></div>
        <span class="text-[0.6rem] md:text-[0.65rem] font-body text-secondary uppercase tracking-widest">Yogyakarta, ID</span>
-    </div>
+    </div> -->
     
     <!-- Background Texture -->
     <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,#111_0%,transparent_100%)] opacity-50 pointer-events-none"></div>

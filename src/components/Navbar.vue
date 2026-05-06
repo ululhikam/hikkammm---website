@@ -9,8 +9,8 @@ const links = [
   { name: 'About', href: '#about' },
   { name: 'Services', href: '#services' },
   { name: 'Capabilities', href: '#capabilities' },
-  { name: 'Portofolio', href: '#portfolio' },
-  { name: 'Awards', href: '#awards' }
+  { name: 'Projects', href: '#portfolio' },
+  { name: 'Experiences', href: '#awards' }
 ]
 </script>
 
