@@ -1,0 +1,113 @@
+# Hikkammm — Portfolio
+
+Website portfolio Ulul Hikam, dipisah menjadi dua aplikasi:
+
+- `frontend/` — Vue 3 + Vite + Tailwind (deploy ke Vercel)
+- `backend/` — Vercel Serverless Functions + Supabase (deploy ke Vercel)
+
+Kontrak API ada di [`apicontract.yaml`](./apicontract.yaml) dan menjadi acuan
+implementasi backend.
+
+## Struktur
+
+```text
+.
+├── apicontract.yaml          # OpenAPI 3.1 — sumber kebenaran API
+├── frontend/
+│   ├── src/
+│   │   ├── components/       # komponen UI
+│   │   ├── sections/         # section halaman Home
+│   │   ├── views/            # halaman route
+│   │   ├── router/           # vue-router
+│   │   ├── data/             # data statis sementara
+│   │   └── lib/              # typed API client
+│   ├── public/
+│   └── vercel.json           # SPA rewrite
+└── backend/
+    ├── api/                  # Vercel Serverless Functions
+    ├── src/                  # helper, mapper, validasi, tipe
+    ├── supabase/
+    │   ├── migrations/       # schema database
+    │   └── seed.sql          # data awal
+    └── vercel.json
+```
+
+## Quick start
+
+### 1. Frontend
+
+```bash
+cd frontend
+npm install
+cp .env.example .env.local
+npm run dev
+```
+
+Frontend berjalan di `http://localhost:5173`. Request ke `/api` di-proxy ke
+`http://localhost:3000` (bisa diubah lewat `VITE_API_PROXY_TARGET`).
+
+### 2. Supabase
+
+1. Buat project baru di [supabase.com](https://supabase.com).
+2. Buka **SQL Editor**, jalankan isi
+   `backend/supabase/migrations/20261028000000_init.sql`.
+3. Jalankan `backend/supabase/seed.sql` untuk mengisi konten awal.
+4. Ambil **Project URL** dan **service_role key** dari
+   *Project Settings → API*.
+
+> `service_role` hanya dipakai di backend. Jangan pernah memasukkannya ke
+> frontend atau commit ke git.
+
+### 3. Backend
+
+```bash
+cd backend
+npm install
+cp .env.example .env.local
+# isi SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, ADMIN_API_TOKEN
+npx vercel dev
+```
+
+API berjalan di `http://localhost:3000`. Cek:
+
+```bash
+curl http://localhost:3000/api/health
+curl http://localhost:3000/api/projects
+```
+
+## Deploy ke Vercel
+
+Deploy sebagai dua project terpisah dari repo yang sama:
+
+| Project  | Root Directory | Build Command   | Output |
+| -------- | -------------- | --------------- | ------ |
+| Frontend | `frontend`     | `npm run build` | `dist` |
+| Backend  | `backend`      | —               | —      |
+
+Environment variables backend: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`,
+`ADMIN_API_TOKEN`, `CORS_ORIGINS`.
+
+Environment variable frontend:
+
+```env
+VITE_API_BASE_URL=https://nama-backend.vercel.app/api
+```
+
+Setelah backend punya domain, tambahkan domain frontend ke `CORS_ORIGINS`.
+
+## Catatan migrasi data
+
+Halaman frontend saat ini masih memakai data statis di `frontend/src/data/`.
+Typed API client sudah tersedia di `frontend/src/lib/api.ts` dan siap dipakai
+untuk migrasi bertahap ke backend, misalnya:
+
+```ts
+import { api } from '@/lib/api'
+
+const { data: projects } = await api.listProjects({ featured: true })
+```
+
+## Dokumentasi
+
+- Kontrak API: [`apicontract.yaml`](./apicontract.yaml)
+- Setup backend & daftar endpoint: [`backend/README.md`](./backend/README.md)

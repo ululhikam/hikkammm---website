@@ -1,0 +1,805 @@
+openapi: 3.1.0
+info:
+  title: Hikkammm API
+  version: 1.0.0
+  description: |
+    Kontrak API untuk website portfolio Ulul Hikam (hikkammm).
+
+    Backend berjalan sebagai Vercel Serverless Functions dan memakai Supabase
+    sebagai database. Endpoint publik hanya membaca konten portfolio dan
+    menerima pesan dari form kontak. Endpoint admin memakai Bearer token.
+
+    Format response:
+    - Sukses satu data: `{ "data": { ... } }`
+    - Sukses list: `{ "data": [ ... ], "meta": { "total", "limit", "offset" } }`
+    - Gagal: `{ "error": { "code", "message", "details?" } }`
+  contact:
+    name: Ulul Hikam
+    email: ululhikam13@gmail.com
+    url: https://hikkammm.my.id
+  license:
+    name: MIT
+    identifier: MIT
+
+security: []
+
+servers:
+  - url: http://localhost:3000
+    description: Local development (`npx vercel dev` di folder backend)
+  - url: https://hikkammm-api.vercel.app
+    description: Production (ganti dengan URL deployment Vercel kamu)
+
+tags:
+  - name: System
+    description: Status dan metadata service
+  - name: Profile
+    description: Profil pemilik portfolio
+  - name: Projects
+    description: Daftar project portfolio
+  - name: Buildings
+    description: Produk/bisnis yang sedang dibangun
+  - name: Experiences
+    description: Pengalaman organisasi dan kerja
+  - name: Awards
+    description: Pencapaian dan penghargaan
+  - name: Contact
+    description: Pesan dari form kontak
+
+paths:
+  /api/health:
+    get:
+      tags: [System]
+      operationId: getHealth
+      summary: Cek status API dan database
+      responses:
+        '200':
+          description: API dan database sehat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '500':
+          $ref: '#/components/responses/ServerError'
+        '503':
+          description: API hidup tetapi database tidak dapat diakses
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+
+  /api/profile:
+    get:
+      tags: [Profile]
+      operationId: getProfile
+      summary: Ambil profil pemilik portfolio
+      responses:
+        '200':
+          description: Profil berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Profile'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/DatabaseError'
+
+  /api/projects:
+    get:
+      tags: [Projects]
+      operationId: listProjects
+      summary: Ambil daftar project
+      parameters:
+        - $ref: '#/components/parameters/CategoryFilter'
+        - $ref: '#/components/parameters/ProjectStatusFilter'
+        - $ref: '#/components/parameters/FeaturedFilter'
+        - $ref: '#/components/parameters/SearchQuery'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Daftar project berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, meta]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Project'
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/DatabaseError'
+
+  /api/projects/{slug}:
+    get:
+      tags: [Projects]
+      operationId: getProject
+      summary: Ambil satu project berdasarkan slug
+      parameters:
+        - $ref: '#/components/parameters/Slug'
+      responses:
+        '200':
+          description: Project berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Project'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/DatabaseError'
+
+  /api/buildings:
+    get:
+      tags: [Buildings]
+      operationId: listBuildings
+      summary: Ambil daftar produk/bisnis yang sedang dibangun
+      parameters:
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Daftar building berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, meta]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Building'
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/DatabaseError'
+
+  /api/buildings/{slug}:
+    get:
+      tags: [Buildings]
+      operationId: getBuilding
+      summary: Ambil satu building berdasarkan slug
+      parameters:
+        - $ref: '#/components/parameters/Slug'
+      responses:
+        '200':
+          description: Building berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Building'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/DatabaseError'
+
+  /api/experiences:
+    get:
+      tags: [Experiences]
+      operationId: listExperiences
+      summary: Ambil daftar pengalaman
+      parameters:
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Daftar pengalaman berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, meta]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Experience'
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/DatabaseError'
+
+  /api/awards:
+    get:
+      tags: [Awards]
+      operationId: listAwards
+      summary: Ambil daftar pencapaian
+      parameters:
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Daftar pencapaian berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, meta]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Award'
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/DatabaseError'
+
+  /api/contact:
+    get:
+      tags: [Contact]
+      operationId: listContactMessages
+      summary: Ambil pesan kontak (admin)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: status
+          in: query
+          required: false
+          description: Filter pesan berdasarkan status
+          schema:
+            $ref: '#/components/schemas/ContactStatus'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Daftar pesan berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, meta]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ContactMessage'
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/DatabaseError'
+    post:
+      tags: [Contact]
+      operationId: createContactMessage
+      summary: Kirim pesan dari form kontak
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateContactMessage'
+      responses:
+        '201':
+          description: Pesan berhasil dikirim
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ContactMessageCreated'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/DatabaseError'
+
+  /api/contact/{id}:
+    patch:
+      tags: [Contact]
+      operationId: updateContactMessage
+      summary: Ubah status pesan kontak (admin)
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/MessageId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateContactMessage'
+      responses:
+        '200':
+          description: Status pesan berhasil diubah
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ContactMessage'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/DatabaseError'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: opaque
+      description: Isi dengan `ADMIN_API_TOKEN` yang ada di environment backend.
+
+  parameters:
+    Slug:
+      name: slug
+      in: path
+      required: true
+      description: Slug unik project atau building
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 120
+        pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$'
+    MessageId:
+      name: id
+      in: path
+      required: true
+      description: UUID pesan kontak
+      schema:
+        type: string
+        format: uuid
+    CategoryFilter:
+      name: category
+      in: query
+      required: false
+      description: Filter berdasarkan kategori (case-insensitive, exact match)
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 100
+    ProjectStatusFilter:
+      name: status
+      in: query
+      required: false
+      description: Filter berdasarkan status project
+      schema:
+        $ref: '#/components/schemas/ProjectStatus'
+    FeaturedFilter:
+      name: featured
+      in: query
+      required: false
+      description: Filter project unggulan
+      schema:
+        type: boolean
+    SearchQuery:
+      name: q
+      in: query
+      required: false
+      description: Pencarian sederhana pada judul dan deskripsi project
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 100
+    Limit:
+      name: limit
+      in: query
+      required: false
+      description: Jumlah data per halaman
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+    Offset:
+      name: offset
+      in: query
+      required: false
+      description: Jumlah data yang dilewati
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+
+  responses:
+    ValidationError:
+      description: Request tidak valid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              code: validation_error
+              message: Request tidak valid
+              details:
+                - path: email
+                  message: Format email tidak valid
+    Unauthorized:
+      description: Bearer token tidak ada atau salah
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              code: unauthorized
+              message: Token admin tidak valid
+    NotFound:
+      description: Data tidak ditemukan
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              code: not_found
+              message: Data tidak ditemukan
+    DatabaseError:
+      description: Terjadi kesalahan pada database
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              code: database_error
+              message: Permintaan database gagal
+    MethodNotAllowed:
+      description: HTTP method tidak didukung untuk endpoint ini
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              code: method_not_allowed
+              message: Method POST tidak diizinkan
+    ServerError:
+      description: Kesalahan internal server
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              code: internal_error
+              message: Terjadi kesalahan pada server
+
+  schemas:
+    Health:
+      type: object
+      required: [status, service, version, database, timestamp]
+      properties:
+        status:
+          type: string
+          enum: [ok, degraded]
+        service:
+          type: string
+          const: hikkammm-api
+        version:
+          type: string
+          example: 1.0.0
+        database:
+          type: string
+          enum: [ok, unavailable]
+        timestamp:
+          type: string
+          format: date-time
+
+    PaginationMeta:
+      type: object
+      required: [total, limit, offset]
+      properties:
+        total:
+          type: integer
+          minimum: 0
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+        offset:
+          type: integer
+          minimum: 0
+
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code:
+              type: string
+              examples:
+                - validation_error
+                - not_found
+                - unauthorized
+                - method_not_allowed
+                - server_misconfigured
+                - database_error
+                - internal_error
+            message:
+              type: string
+            details:
+              description: Detail tambahan, biasanya untuk error validasi
+              oneOf:
+                - type: array
+                  items:
+                    type: object
+                    additionalProperties: true
+                - type: object
+                  additionalProperties: true
+
+    Profile:
+      type: object
+      required: [name, headline, bio, location, email, socials, updatedAt]
+      properties:
+        name:
+          type: string
+          example: Ulul Hikam
+        headline:
+          type: string
+          example: Software Developer & Builder
+        bio:
+          type: array
+          items:
+            type: string
+        location:
+          type: string
+          example: Yogyakarta, Indonesia
+        email:
+          type: string
+          format: email
+        avatarUrl:
+          type: [string, 'null']
+          format: uri
+        socials:
+          type: array
+          items:
+            type: object
+            required: [name, url]
+            properties:
+              name:
+                type: string
+              url:
+                type: string
+                format: uri
+        updatedAt:
+          type: string
+          format: date-time
+
+    ProjectStatus:
+      type: string
+      enum: [live, in-progress, concept, archived]
+
+    Project:
+      type: object
+      required:
+        - id
+        - slug
+        - title
+        - category
+        - tech
+        - year
+        - status
+        - description
+        - fullDescription
+        - imageUrl
+        - featured
+        - sortOrder
+      properties:
+        id:
+          type: string
+          format: uuid
+        slug:
+          type: string
+          example: checker-hoax-scam
+        title:
+          type: string
+        category:
+          type: string
+          example: Web App
+        tech:
+          type: array
+          items:
+            type: string
+        year:
+          type: string
+          example: '2025'
+        status:
+          $ref: '#/components/schemas/ProjectStatus'
+        description:
+          type: string
+        fullDescription:
+          type: string
+        imageUrl:
+          type: string
+          format: uri
+        repoUrl:
+          type: [string, 'null']
+          format: uri
+        liveUrl:
+          type: [string, 'null']
+          format: uri
+        featured:
+          type: boolean
+        sortOrder:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Building:
+      type: object
+      required: [id, slug, title, tagline, description, detail, sortOrder]
+      properties:
+        id:
+          type: string
+          format: uuid
+        slug:
+          type: string
+          example: concern-dev
+        title:
+          type: string
+        tagline:
+          type: string
+        description:
+          type: string
+        detail:
+          type: string
+        linkUrl:
+          type: [string, 'null']
+          format: uri
+        sortOrder:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Experience:
+      type: object
+      required: [id, organization, title, description, type, sortOrder]
+      properties:
+        id:
+          type: string
+          format: uuid
+        organization:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        startYear:
+          type: [integer, 'null']
+        endYear:
+          type: [integer, 'null']
+        type:
+          type: string
+          enum: [work, organization, education, volunteer]
+        sortOrder:
+          type: integer
+
+    Award:
+      type: object
+      required: [id, title, description, sortOrder]
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        issuer:
+          type: [string, 'null']
+        year:
+          type: [string, 'null']
+        description:
+          type: string
+        sortOrder:
+          type: integer
+
+    ContactStatus:
+      type: string
+      enum: [new, read, archived]
+
+    ContactMessage:
+      type: object
+      required: [id, name, email, subject, message, status, createdAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        subject:
+          type: string
+        message:
+          type: string
+        status:
+          $ref: '#/components/schemas/ContactStatus'
+        createdAt:
+          type: string
+          format: date-time
+
+    ContactMessageCreated:
+      type: object
+      required: [id, createdAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+
+    CreateContactMessage:
+      type: object
+      required: [name, email, subject, message]
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 100
+        email:
+          type: string
+          format: email
+          maxLength: 200
+        subject:
+          type: string
+          minLength: 3
+          maxLength: 150
+        message:
+          type: string
+          minLength: 10
+          maxLength: 5000
+        website:
+          type: string
+          maxLength: 200
+          description: |
+            Honeypot anti-spam. Biarkan kosong. Jika diisi, API tetap
+            mengembalikan 201 tetapi pesan tidak disimpan.
+
+    UpdateContactMessage:
+      type: object
+      required: [status]
+      properties:
+        status:
+          $ref: '#/components/schemas/ContactStatus'
