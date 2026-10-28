@@ -1,7 +1,7 @@
-import { ApiError, sendJson, withApi } from '../src/http'
-import { mapProfile } from '../src/mappers'
-import { getSupabase, throwDatabaseError } from '../src/supabase'
-import type { ProfileRow } from '../src/types'
+import { ApiError, sendJson, withApi } from '../src/http.js'
+import { mapProfile } from '../src/mappers.js'
+import { getSupabase, throwDatabaseError } from '../src/supabase.js'
+import type { ProfileRow } from '../src/types.js'
 
 export default withApi(['GET'], async (_req, res) => {
   const { data, error } = await getSupabase()

@@ -1,5 +1,5 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
-import { ApiError } from './http'
+import { ApiError } from './http.js'
 
 let cachedClient: SupabaseClient | null = null
 

@@ -19,6 +19,8 @@ dist-ssr
 .env.*
 !.env.example
 !**/.env.example
+# Production frontend config (public URL, aman di-commit)
+!frontend/.env.production
 *.local
 
 # Vite

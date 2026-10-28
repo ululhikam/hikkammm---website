@@ -26,8 +26,8 @@ security: []
 servers:
   - url: http://localhost:3000
     description: Local development (`npx vercel dev` di folder backend)
-  - url: https://hikkammm-api.vercel.app
-    description: Production (ganti dengan URL deployment Vercel kamu)
+  - url: https://backend-eight-alpha-61.vercel.app
+    description: Production Vercel
 
 tags:
   - name: System

@@ -135,5 +135,5 @@ curl http://localhost:3000/api/contact \
 4. Deploy. `vercel.json` sudah mengatur region `sin1`, durasi fungsi, dan
    rewrite `/` ke `/api/health`.
 
-Setelah deploy, update `servers` di `apicontract.yaml` dan
-`VITE_API_BASE_URL` di frontend dengan URL backend yang sebenarnya.
+URL production saat ini: `https://backend-eight-alpha-61.vercel.app`.
+Pastikan `CORS_ORIGINS` di Vercel berisi domain frontend yang dipakai.

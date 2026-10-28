@@ -90,8 +90,11 @@ Environment variables backend: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`,
 Environment variable frontend:
 
 ```env
-VITE_API_BASE_URL=https://nama-backend.vercel.app/api
+VITE_API_BASE_URL=https://backend-eight-alpha-61.vercel.app/api
 ```
+
+Nilai production ini sudah disimpan di `frontend/.env.production`, jadi build
+Vercel otomatis memakai backend tersebut.
 
 Setelah backend punya domain, tambahkan domain frontend ke `CORS_ORIGINS`.
 

@@ -1,7 +1,7 @@
-import { ApiError, queryValue, sendJson, withApi } from '../../src/http'
-import { mapBuilding } from '../../src/mappers'
-import { getSupabase, throwDatabaseError } from '../../src/supabase'
-import type { BuildingRow } from '../../src/types'
+import { ApiError, queryValue, sendJson, withApi } from '../../src/http.js'
+import { mapBuilding } from '../../src/mappers.js'
+import { getSupabase, throwDatabaseError } from '../../src/supabase.js'
+import type { BuildingRow } from '../../src/types.js'
 
 export default withApi(['GET'], async (req, res) => {
   const slug = queryValue(req, 'slug')

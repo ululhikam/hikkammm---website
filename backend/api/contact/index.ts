@@ -1,13 +1,13 @@
 import { randomUUID } from 'node:crypto'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { getBody, queryValue, requireAdmin, sendJson, withApi } from '../../src/http'
-import { mapContactMessage } from '../../src/mappers'
-import { getSupabase, throwDatabaseError } from '../../src/supabase'
-import type { ContactMessageRow } from '../../src/types'
+import { getBody, queryValue, requireAdmin, sendJson, withApi } from '../../src/http.js'
+import { mapContactMessage } from '../../src/mappers.js'
+import { getSupabase, throwDatabaseError } from '../../src/supabase.js'
+import type { ContactMessageRow } from '../../src/types.js'
 import {
   contactCreateSchema,
   contactListQuerySchema,
-} from '../../src/validation'
+} from '../../src/validation.js'
 
 async function listMessages(req: VercelRequest, res: VercelResponse): Promise<void> {
   requireAdmin(req)

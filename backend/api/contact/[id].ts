@@ -1,8 +1,8 @@
-import { ApiError, getBody, queryValue, requireAdmin, sendJson, withApi } from '../../src/http'
-import { mapContactMessage } from '../../src/mappers'
-import { getSupabase, throwDatabaseError } from '../../src/supabase'
-import type { ContactMessageRow } from '../../src/types'
-import { contactUpdateSchema, messageIdSchema } from '../../src/validation'
+import { ApiError, getBody, queryValue, requireAdmin, sendJson, withApi } from '../../src/http.js'
+import { mapContactMessage } from '../../src/mappers.js'
+import { getSupabase, throwDatabaseError } from '../../src/supabase.js'
+import type { ContactMessageRow } from '../../src/types.js'
+import { contactUpdateSchema, messageIdSchema } from '../../src/validation.js'
 
 export default withApi(['PATCH'], async (req, res) => {
   requireAdmin(req)

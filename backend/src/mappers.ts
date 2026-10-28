@@ -6,7 +6,7 @@ import type {
   ProfileRow,
   ProjectRow,
   SocialLink,
-} from './types'
+} from './types.js'
 
 export function mapProject(row: ProjectRow) {
   return {

@@ -1,5 +1,5 @@
-import { sendJson, withApi } from '../src/http'
-import { getSupabase } from '../src/supabase'
+import { sendJson, withApi } from '../src/http.js'
+import { getSupabase } from '../src/supabase.js'
 
 export default withApi(['GET'], async (_req, res) => {
   let database: 'ok' | 'unavailable' = 'unavailable'

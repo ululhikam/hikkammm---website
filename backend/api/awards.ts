@@ -1,8 +1,8 @@
-import { queryValue, sendJson, withApi } from '../src/http'
-import { mapAward } from '../src/mappers'
-import { getSupabase, throwDatabaseError } from '../src/supabase'
-import type { AwardRow } from '../src/types'
-import { paginationSchema } from '../src/validation'
+import { queryValue, sendJson, withApi } from '../src/http.js'
+import { mapAward } from '../src/mappers.js'
+import { getSupabase, throwDatabaseError } from '../src/supabase.js'
+import type { AwardRow } from '../src/types.js'
+import { paginationSchema } from '../src/validation.js'
 
 export default withApi(['GET'], async (req, res) => {
   const params = paginationSchema.parse({
