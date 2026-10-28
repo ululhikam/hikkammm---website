@@ -1,10 +1,12 @@
-import { queryValue, sendJson, withApi } from '../../src/http.js'
+import type { VercelRequest, VercelResponse } from '@vercel/node'
+import { getBody, queryValue, requireAdmin, sendJson, withApi } from '../../src/http.js'
 import { mapBuilding } from '../../src/mappers.js'
-import { getSupabase, throwDatabaseError } from '../../src/supabase.js'
+import { buildingInsert } from '../../src/payloads.js'
+import { getSupabase, throwDatabaseError, throwWriteError } from '../../src/supabase.js'
 import type { BuildingRow } from '../../src/types.js'
-import { paginationSchema } from '../../src/validation.js'
+import { buildingCreateSchema, paginationSchema } from '../../src/validation.js'
 
-export default withApi(['GET'], async (req, res) => {
+async function listBuildings(req: VercelRequest, res: VercelResponse): Promise<void> {
   const params = paginationSchema.parse({
     limit: queryValue(req, 'limit'),
     offset: queryValue(req, 'offset'),
@@ -31,4 +33,31 @@ export default withApi(['GET'], async (req, res) => {
       offset: params.offset,
     },
   })
+}
+
+async function createBuilding(req: VercelRequest, res: VercelResponse): Promise<void> {
+  requireAdmin(req)
+
+  const input = buildingCreateSchema.parse(getBody(req))
+
+  const { data, error } = await getSupabase()
+    .from('buildings')
+    .insert(buildingInsert(input))
+    .select('*')
+    .single()
+
+  if (error) {
+    throwWriteError(error)
+  }
+
+  sendJson(res, 201, { data: mapBuilding(data as BuildingRow) })
+}
+
+export default withApi(['GET', 'POST'], async (req, res) => {
+  if (req.method === 'POST') {
+    await createBuilding(req, res)
+    return
+  }
+
+  await listBuildings(req, res)
 })

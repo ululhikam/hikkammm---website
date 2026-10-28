@@ -133,3 +133,65 @@ export interface PaginationQuery {
 export interface ContactMessagesQuery extends PaginationQuery {
   status?: ContactStatus
 }
+
+export interface ProjectInput {
+  slug: string
+  title: string
+  category: string
+  tech: string[]
+  year: string
+  status: ProjectStatus
+  description: string
+  fullDescription: string
+  imageUrl: string
+  repoUrl: string | null
+  liveUrl: string | null
+  featured: boolean
+  sortOrder: number
+}
+
+export type ProjectUpdateInput = Partial<ProjectInput>
+
+export interface BuildingInput {
+  slug: string
+  title: string
+  tagline: string
+  description: string
+  detail: string
+  linkUrl: string | null
+  sortOrder: number
+}
+
+export type BuildingUpdateInput = Partial<BuildingInput>
+
+export interface ExperienceInput {
+  organization: string
+  title: string
+  description: string
+  startYear: number | null
+  endYear: number | null
+  type: ExperienceType
+  sortOrder: number
+}
+
+export type ExperienceUpdateInput = Partial<ExperienceInput>
+
+export interface AwardInput {
+  title: string
+  issuer: string | null
+  year: string | null
+  description: string
+  sortOrder: number
+}
+
+export type AwardUpdateInput = Partial<AwardInput>
+
+export interface ProfileInput {
+  name: string
+  headline: string
+  bio: string[]
+  location: string
+  email: string
+  avatarUrl: string | null
+  socials: SocialLink[]
+}

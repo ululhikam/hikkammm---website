@@ -33,3 +33,15 @@ export function throwDatabaseError(error: { message?: string } | null): never {
   console.error('[supabase]', error?.message ?? error)
   throw new ApiError(500, 'database_error', 'Permintaan database gagal')
 }
+
+export function throwWriteError(error: { code?: string; message?: string } | null): never {
+  if (error?.code === '23505') {
+    throw new ApiError(409, 'conflict', 'Data dengan slug tersebut sudah ada')
+  }
+
+  if (error?.code === '23514') {
+    throw new ApiError(400, 'validation_error', 'Data tidak memenuhi aturan database')
+  }
+
+  throwDatabaseError(error)
+}

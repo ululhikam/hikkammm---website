@@ -1,10 +1,12 @@
-import { queryValue, sendJson, withApi } from '../../src/http.js'
+import type { VercelRequest, VercelResponse } from '@vercel/node'
+import { getBody, queryValue, requireAdmin, sendJson, withApi } from '../../src/http.js'
 import { mapProject } from '../../src/mappers.js'
-import { getSupabase, throwDatabaseError } from '../../src/supabase.js'
+import { projectInsert } from '../../src/payloads.js'
+import { getSupabase, throwDatabaseError, throwWriteError } from '../../src/supabase.js'
 import type { ProjectRow } from '../../src/types.js'
-import { projectQuerySchema } from '../../src/validation.js'
+import { projectCreateSchema, projectQuerySchema } from '../../src/validation.js'
 
-export default withApi(['GET'], async (req, res) => {
+async function listProjects(req: VercelRequest, res: VercelResponse): Promise<void> {
   const params = projectQuerySchema.parse({
     category: queryValue(req, 'category'),
     status: queryValue(req, 'status'),
@@ -58,4 +60,31 @@ export default withApi(['GET'], async (req, res) => {
       offset: params.offset,
     },
   })
+}
+
+async function createProject(req: VercelRequest, res: VercelResponse): Promise<void> {
+  requireAdmin(req)
+
+  const input = projectCreateSchema.parse(getBody(req))
+
+  const { data, error } = await getSupabase()
+    .from('projects')
+    .insert(projectInsert(input))
+    .select('*')
+    .single()
+
+  if (error) {
+    throwWriteError(error)
+  }
+
+  sendJson(res, 201, { data: mapProject(data as ProjectRow) })
+}
+
+export default withApi(['GET', 'POST'], async (req, res) => {
+  if (req.method === 'POST') {
+    await createProject(req, res)
+    return
+  }
+
+  await listProjects(req, res)
 })

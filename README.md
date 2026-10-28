@@ -75,6 +75,25 @@ curl http://localhost:3000/api/health
 curl http://localhost:3000/api/projects
 ```
 
+### 4. Admin panel
+
+Buka `http://localhost:5173/admin`, lalu masukkan nilai `ADMIN_API_TOKEN`
+dari environment backend. Token disimpan di browser (localStorage atau
+sessionStorage, tergantung opsi "Ingat sesi") dan dikirim sebagai Bearer token
+ke endpoint admin.
+
+Admin panel bisa dipakai untuk CRUD:
+
+- projects
+- buildings
+- experiences
+- awards
+- profile
+- pesan kontak (ubah status dan hapus)
+
+Halaman admin memakai layout terpisah dan tidak menampilkan navbar/efek
+public site. Semua endpoint mutasi tetap dilindungi Bearer token di backend.
+
 ## Deploy ke Vercel
 
 Deploy sebagai dua project terpisah dari repo yang sama:

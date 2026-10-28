@@ -89,6 +89,37 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/DatabaseError'
+    patch:
+      tags: [Profile]
+      operationId: updateProfile
+      summary: Ubah profil pemilik portfolio (admin)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileInput'
+      responses:
+        '200':
+          description: Profil berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Profile'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/DatabaseError'
 
   /api/projects:
     get:
@@ -121,6 +152,37 @@ paths:
           $ref: '#/components/responses/ValidationError'
         '500':
           $ref: '#/components/responses/DatabaseError'
+    post:
+      tags: [Projects]
+      operationId: createProject
+      summary: Tambah project (admin)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectInput'
+      responses:
+        '201':
+          description: Project berhasil dibuat
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Project'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/DatabaseError'
 
   /api/projects/{slug}:
     get:
@@ -140,6 +202,58 @@ paths:
                 properties:
                   data:
                     $ref: '#/components/schemas/Project'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/DatabaseError'
+    patch:
+      tags: [Projects]
+      operationId: updateProject
+      summary: Ubah project (admin)
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Slug'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectUpdateInput'
+      responses:
+        '200':
+          description: Project berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Project'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/DatabaseError'
+    delete:
+      tags: [Projects]
+      operationId: deleteProject
+      summary: Hapus project (admin)
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Slug'
+      responses:
+        '204':
+          description: Project berhasil dihapus
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
         '500':
@@ -172,6 +286,37 @@ paths:
           $ref: '#/components/responses/ValidationError'
         '500':
           $ref: '#/components/responses/DatabaseError'
+    post:
+      tags: [Buildings]
+      operationId: createBuilding
+      summary: Tambah building (admin)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BuildingInput'
+      responses:
+        '201':
+          description: Building berhasil dibuat
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Building'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/DatabaseError'
 
   /api/buildings/{slug}:
     get:
@@ -191,6 +336,58 @@ paths:
                 properties:
                   data:
                     $ref: '#/components/schemas/Building'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/DatabaseError'
+    patch:
+      tags: [Buildings]
+      operationId: updateBuilding
+      summary: Ubah building (admin)
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Slug'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BuildingUpdateInput'
+      responses:
+        '200':
+          description: Building berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Building'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/DatabaseError'
+    delete:
+      tags: [Buildings]
+      operationId: deleteBuilding
+      summary: Hapus building (admin)
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Slug'
+      responses:
+        '204':
+          description: Building berhasil dihapus
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
         '500':
@@ -223,6 +420,87 @@ paths:
           $ref: '#/components/responses/ValidationError'
         '500':
           $ref: '#/components/responses/DatabaseError'
+    post:
+      tags: [Experiences]
+      operationId: createExperience
+      summary: Tambah experience (admin)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExperienceInput'
+      responses:
+        '201':
+          description: Experience berhasil dibuat
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Experience'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/DatabaseError'
+
+  /api/experiences/{id}:
+    patch:
+      tags: [Experiences]
+      operationId: updateExperience
+      summary: Ubah experience (admin)
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/EntryId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExperienceUpdateInput'
+      responses:
+        '200':
+          description: Experience berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Experience'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/DatabaseError'
+    delete:
+      tags: [Experiences]
+      operationId: deleteExperience
+      summary: Hapus experience (admin)
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/EntryId'
+      responses:
+        '204':
+          description: Experience berhasil dihapus
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/DatabaseError'
 
   /api/awards:
     get:
@@ -249,6 +527,87 @@ paths:
                     $ref: '#/components/schemas/PaginationMeta'
         '400':
           $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/DatabaseError'
+    post:
+      tags: [Awards]
+      operationId: createAward
+      summary: Tambah award (admin)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AwardInput'
+      responses:
+        '201':
+          description: Award berhasil dibuat
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Award'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/DatabaseError'
+
+  /api/awards/{id}:
+    patch:
+      tags: [Awards]
+      operationId: updateAward
+      summary: Ubah award (admin)
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/EntryId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AwardUpdateInput'
+      responses:
+        '200':
+          description: Award berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Award'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/DatabaseError'
+    delete:
+      tags: [Awards]
+      operationId: deleteAward
+      summary: Hapus award (admin)
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/EntryId'
+      responses:
+        '204':
+          description: Award berhasil dihapus
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/DatabaseError'
 
@@ -349,6 +708,23 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/DatabaseError'
+    delete:
+      tags: [Contact]
+      operationId: deleteContactMessage
+      summary: Hapus pesan kontak (admin)
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/MessageId'
+      responses:
+        '204':
+          description: Pesan berhasil dihapus
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/DatabaseError'
 
 components:
   securitySchemes:
@@ -374,6 +750,14 @@ components:
       in: path
       required: true
       description: UUID pesan kontak
+      schema:
+        type: string
+        format: uuid
+    EntryId:
+      name: id
+      in: path
+      required: true
+      description: UUID experience atau award
       schema:
         type: string
         format: uuid
@@ -453,6 +837,16 @@ components:
             error:
               code: unauthorized
               message: Token admin tidak valid
+    Conflict:
+      description: Data unik sudah dipakai
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              code: conflict
+              message: Data dengan slug tersebut sudah ada
     NotFound:
       description: Data tidak ditemukan
       content:
@@ -803,3 +1197,324 @@ components:
       properties:
         status:
           $ref: '#/components/schemas/ContactStatus'
+
+    ProjectInput:
+      type: object
+      required: [slug, title, category, year, description]
+      properties:
+        slug:
+          type: string
+          minLength: 1
+          maxLength: 120
+          pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$'
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        category:
+          type: string
+          minLength: 1
+          maxLength: 100
+        tech:
+          type: array
+          maxItems: 30
+          items:
+            type: string
+            minLength: 1
+            maxLength: 60
+          default: []
+        year:
+          type: string
+          minLength: 1
+          maxLength: 20
+        status:
+          $ref: '#/components/schemas/ProjectStatus'
+        description:
+          type: string
+          minLength: 1
+          maxLength: 2000
+        fullDescription:
+          type: string
+          maxLength: 20000
+          default: ''
+        imageUrl:
+          type: string
+          maxLength: 2000
+          description: Boleh string kosong jika belum ada gambar.
+          default: ''
+        repoUrl:
+          type: [string, 'null']
+          format: uri
+          maxLength: 2000
+        liveUrl:
+          type: [string, 'null']
+          format: uri
+          maxLength: 2000
+        featured:
+          type: boolean
+          default: false
+        sortOrder:
+          type: integer
+          default: 0
+
+    ProjectUpdateInput:
+      type: object
+      minProperties: 1
+      properties:
+        slug:
+          type: string
+          minLength: 1
+          maxLength: 120
+          pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$'
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        category:
+          type: string
+          minLength: 1
+          maxLength: 100
+        tech:
+          type: array
+          maxItems: 30
+          items:
+            type: string
+            minLength: 1
+            maxLength: 60
+        year:
+          type: string
+          minLength: 1
+          maxLength: 20
+        status:
+          $ref: '#/components/schemas/ProjectStatus'
+        description:
+          type: string
+          minLength: 1
+          maxLength: 2000
+        fullDescription:
+          type: string
+          maxLength: 20000
+        imageUrl:
+          type: string
+          maxLength: 2000
+        repoUrl:
+          type: [string, 'null']
+          format: uri
+          maxLength: 2000
+        liveUrl:
+          type: [string, 'null']
+          format: uri
+          maxLength: 2000
+        featured:
+          type: boolean
+        sortOrder:
+          type: integer
+
+    BuildingInput:
+      type: object
+      required: [slug, title]
+      properties:
+        slug:
+          type: string
+          minLength: 1
+          maxLength: 120
+          pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$'
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        tagline:
+          type: string
+          maxLength: 300
+          default: ''
+        description:
+          type: string
+          maxLength: 5000
+          default: ''
+        detail:
+          type: string
+          maxLength: 20000
+          default: ''
+        linkUrl:
+          type: [string, 'null']
+          format: uri
+          maxLength: 2000
+        sortOrder:
+          type: integer
+          default: 0
+
+    BuildingUpdateInput:
+      type: object
+      minProperties: 1
+      properties:
+        slug:
+          type: string
+          minLength: 1
+          maxLength: 120
+          pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$'
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        tagline:
+          type: string
+          maxLength: 300
+        description:
+          type: string
+          maxLength: 5000
+        detail:
+          type: string
+          maxLength: 20000
+        linkUrl:
+          type: [string, 'null']
+          format: uri
+          maxLength: 2000
+        sortOrder:
+          type: integer
+
+    ExperienceInput:
+      type: object
+      required: [organization, title]
+      properties:
+        organization:
+          type: string
+          minLength: 1
+          maxLength: 200
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        description:
+          type: string
+          maxLength: 5000
+          default: ''
+        startYear:
+          type: [integer, 'null']
+          minimum: 1900
+          maximum: 2200
+        endYear:
+          type: [integer, 'null']
+          minimum: 1900
+          maximum: 2200
+        type:
+          type: string
+          enum: [work, organization, education, volunteer]
+          default: organization
+        sortOrder:
+          type: integer
+          default: 0
+
+    ExperienceUpdateInput:
+      type: object
+      minProperties: 1
+      properties:
+        organization:
+          type: string
+          minLength: 1
+          maxLength: 200
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        description:
+          type: string
+          maxLength: 5000
+        startYear:
+          type: [integer, 'null']
+          minimum: 1900
+          maximum: 2200
+        endYear:
+          type: [integer, 'null']
+          minimum: 1900
+          maximum: 2200
+        type:
+          type: string
+          enum: [work, organization, education, volunteer]
+        sortOrder:
+          type: integer
+
+    AwardInput:
+      type: object
+      required: [title]
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        issuer:
+          type: [string, 'null']
+          maxLength: 300
+        year:
+          type: [string, 'null']
+          maxLength: 300
+        description:
+          type: string
+          maxLength: 5000
+          default: ''
+        sortOrder:
+          type: integer
+          default: 0
+
+    AwardUpdateInput:
+      type: object
+      minProperties: 1
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        issuer:
+          type: [string, 'null']
+          maxLength: 300
+        year:
+          type: [string, 'null']
+          maxLength: 300
+        description:
+          type: string
+          maxLength: 5000
+        sortOrder:
+          type: integer
+
+    ProfileInput:
+      type: object
+      minProperties: 1
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        headline:
+          type: string
+          maxLength: 300
+        bio:
+          type: array
+          maxItems: 20
+          items:
+            type: string
+            maxLength: 2000
+        location:
+          type: string
+          maxLength: 200
+        email:
+          type: string
+          format: email
+          maxLength: 200
+        avatarUrl:
+          type: [string, 'null']
+          format: uri
+          maxLength: 2000
+        socials:
+          type: array
+          maxItems: 20
+          items:
+            type: object
+            required: [name, url]
+            properties:
+              name:
+                type: string
+                minLength: 1
+                maxLength: 60
+              url:
+                type: string
+                format: uri
+                maxLength: 2000

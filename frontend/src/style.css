@@ -35,3 +35,93 @@ html.lenis, html.lenis body {
 .lenis.lenis-scrolling iframe {
   pointer-events: none;
 }
+
+@layer components {
+  .admin-card {
+    @apply rounded-2xl border border-white/10 bg-white/[0.03];
+  }
+
+  .admin-label {
+    @apply mb-1.5 block text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-white/45;
+  }
+
+  .admin-input {
+    @apply w-full rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2.5 text-sm text-white placeholder-white/25 outline-none transition focus:border-white/30 focus:bg-white/[0.06];
+  }
+
+  .admin-textarea {
+    @apply min-h-[104px] resize-y;
+  }
+
+  .admin-select {
+    @apply appearance-none;
+  }
+
+  .admin-btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] px-4 py-2.5 text-sm font-medium text-white transition hover:bg-white/[0.1] disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .admin-btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-white bg-white px-4 py-2.5 text-sm font-semibold text-black transition hover:bg-white/85 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .admin-btn-danger {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-red-400/20 bg-red-500/10 px-4 py-2.5 text-sm font-medium text-red-300 transition hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .admin-btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm text-white/50 transition hover:bg-white/[0.06] hover:text-white disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .admin-table {
+    @apply w-full min-w-[720px] border-collapse text-left text-sm;
+  }
+
+  .admin-table thead th {
+    @apply border-b border-white/10 px-3 py-3 text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-white/35;
+  }
+
+  .admin-table tbody td {
+    @apply border-b border-white/5 px-3 py-3 align-middle text-white/70;
+  }
+
+  .admin-table tbody tr {
+    @apply transition hover:bg-white/[0.025];
+  }
+}
+
+.admin-input:disabled {
+  @apply cursor-not-allowed opacity-50;
+}
+
+.admin-fade-enter-active,
+.admin-fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.admin-fade-enter-from,
+.admin-fade-leave-to {
+  opacity: 0;
+}
+
+.admin-fade-enter-active .admin-modal-panel,
+.admin-fade-leave-active .admin-modal-panel {
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.admin-fade-enter-from .admin-modal-panel,
+.admin-fade-leave-to .admin-modal-panel {
+  opacity: 0;
+  transform: translateY(10px) scale(0.98);
+}
+
+.admin-toast-enter-active,
+.admin-toast-leave-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.admin-toast-enter-from,
+.admin-toast-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+}
