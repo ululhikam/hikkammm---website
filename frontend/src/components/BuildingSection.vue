@@ -1,5 +1,19 @@
 <script setup lang="ts">
-import { buildings } from '@/data/projects'
+import { onMounted, ref } from 'vue'
+import { buildings as staticBuildings } from '@/data/projects'
+import { loadBuildings, type PublicBuilding } from '@/lib/publicContent'
+
+const buildings = ref<PublicBuilding[]>([...staticBuildings])
+
+onMounted(() => {
+  void loadBuildings()
+    .then((items) => {
+      buildings.value = items
+    })
+    .catch(() => {
+      // Tetap pakai data statis kalau API tidak bisa diakses.
+    })
+})
 </script>
 
 <template>

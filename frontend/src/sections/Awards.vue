@@ -1,10 +1,24 @@
 <script setup lang="ts">
+import { onMounted, ref } from 'vue'
 import TiltCard from '../components/TiltCard.vue'
+import { loadAwards, type PublicAward } from '@/lib/publicContent'
 
-const wins = [
-  { title: 'Lomba Puisi', desc: 'Juara lomba puisi — kemampuan menulis kreatif di tingkat event.' },
-  { title: 'IIIREX', desc: 'Lomba inovasi aplikasi untuk kesehatan — menghadirkan Cathy, aplikasi inovasi kesehatan.' },
+const staticWins: PublicAward[] = [
+  { title: 'Lomba Puisi', desc: 'Juara lomba puisi — kemampuan menulis kreatif di tingkat event.', meta: 'Achievement' },
+  { title: 'IIIREX', desc: 'Lomba inovasi aplikasi untuk kesehatan — menghadirkan Cathy, aplikasi inovasi kesehatan.', meta: 'Achievement' },
 ]
+
+const wins = ref<PublicAward[]>(staticWins)
+
+onMounted(() => {
+  void loadAwards()
+    .then((items) => {
+      wins.value = items
+    })
+    .catch(() => {
+      // Tetap pakai data statis kalau API tidak bisa diakses.
+    })
+})
 </script>
 <template>
   <section id="wins" class="w-full py-32 px-6 md:px-24 bg-[#050505] border-t border-[#222]">
@@ -16,7 +30,7 @@ const wins = [
           <TiltCard :glare="true">
             <div class="bg-[#0a0a0a] border border-[#222] p-8 rounded-xl min-h-[220px] flex flex-col items-start hover:bg-[#111] transition-colors relative overflow-hidden group">
 
-              <div class="text-accent font-body text-xs tracking-widest mb-4 border border-[#333] px-3 py-1 rounded-full">Achievement</div>
+              <div class="text-accent font-body text-xs tracking-widest mb-4 border border-[#333] px-3 py-1 rounded-full">{{ win.meta }}</div>
               <h3 class="text-3xl font-heading text-secondary mb-4 uppercase leading-none">{{ win.title }}</h3>
               <p class="text-[#888] font-body text-sm font-light leading-relaxed">{{ win.desc }}</p>
 

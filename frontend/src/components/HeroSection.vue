@@ -1,9 +1,17 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
 import gsap from 'gsap'
+import defaultHeroImage from '@/assets/hikam.webp'
+import { loadProfile } from '@/lib/publicContent'
 
 const mainText = ref<HTMLElement | null>(null)
 const floaters = ref<HTMLElement[]>([])
+const heroImage = ref(defaultHeroImage)
+const tagline = ref('Software Developer exploring the intersection of software, data, and AI.')
+
+const onHeroImageError = () => {
+  heroImage.value = defaultHeroImage
+}
 
 const handleParallax = (clientX: number, clientY: number) => {
   if (!mainText.value) return
@@ -68,6 +76,20 @@ onMounted(() => {
   
   window.addEventListener('mousemove', onMouseMove)
   window.addEventListener('touchmove', onTouchMove, { passive: true })
+
+  void loadProfile()
+    .then((profile) => {
+      if (profile.avatarUrl) {
+        heroImage.value = profile.avatarUrl
+      }
+
+      if (profile.headline) {
+        tagline.value = profile.headline
+      }
+    })
+    .catch(() => {
+      // Tetap pakai gambar dan teks default kalau API tidak bisa diakses.
+    })
 })
 
 onUnmounted(() => {
@@ -86,7 +108,7 @@ onUnmounted(() => {
                 md:top-[20%] md:left-[10%] md:translate-x-0 
                 w-48 h-48 sm:w-56 sm:h-56 md:w-48 md:h-48 
                 rounded-full overflow-hidden filter grayscale contrast-125">
-       <img src="@/assets/hikam.webp" class="w-full h-full object-cover" alt="Creative abstract" />
+       <img :src="heroImage" class="w-full h-full object-cover" alt="Creative abstract" @error="onHeroImageError" />
     </div>
 
     <!-- Massive Anti-Mainstream Text: Diturunkan sedikit ke mt-[18vh] di mobile agar memberi ruang untuk foto di atasnya -->
@@ -112,7 +134,7 @@ onUnmounted(() => {
     <!-- Descriptive Text: Ditampilkan di mobile agar layar bawah tidak kosong -->
     <div :ref="el => { if(el) floaters.push(el as HTMLElement) }" class="absolute bottom-[20%] left-[6vw] w-[60%] md:top-[35%] md:bottom-auto md:right-[8%] md:left-auto md:w-48 z-20 text-left md:text-right mix-blend-difference">
        <p class="text-[0.65rem] md:text-xs font-body uppercase text-accent tracking-widest leading-relaxed">
-         Software Developer exploring the intersection of software, data, and AI.
+         {{ tagline }}
        </p>
     </div>
     

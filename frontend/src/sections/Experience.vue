@@ -1,12 +1,26 @@
 <script setup lang="ts">
+import { onMounted, ref } from 'vue'
 import TiltCard from '../components/TiltCard.vue'
+import { loadExperiences, type PublicExperience } from '@/lib/publicContent'
 
-const experiences = [
+const staticExperiences: PublicExperience[] = [
   { org: 'Informatics Student Association', title: 'Vice Chairman', role: 'Led major programs — Syntax (intro workshops & competitions) and DeForka (academic & non-academic competitions + seminar)' },
   { org: 'BEM UST', title: 'Staff — Ministry of Foreign Affairs', role: 'Communication, external relations, networking, and organizational collaboration' },
   { org: 'Teater', title: 'Project Manager', role: 'Coordinating teams, production, and execution under deadlines' },
   { org: 'HMI (Himpunan Mahasiswa Islam)', title: 'Staff — PTKP', role: 'Student community involvement and leadership development' },
 ]
+
+const experiences = ref<PublicExperience[]>(staticExperiences)
+
+onMounted(() => {
+  void loadExperiences()
+    .then((items) => {
+      experiences.value = items
+    })
+    .catch(() => {
+      // Tetap pakai data statis kalau API tidak bisa diakses.
+    })
+})
 </script>
 <template>
   <section id="experience" class="w-full py-32 px-6 md:px-24 bg-[#050505] border-t border-[#222]">

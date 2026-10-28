@@ -1,5 +1,19 @@
 <script setup lang="ts">
-import { projects } from '@/data/projects'
+import { onMounted, ref } from 'vue'
+import { projects as staticProjects } from '@/data/projects'
+import { loadProjects, type PublicProject } from '@/lib/publicContent'
+
+const projects = ref<PublicProject[]>([...staticProjects])
+
+onMounted(() => {
+  void loadProjects()
+    .then((items) => {
+      projects.value = items
+    })
+    .catch(() => {
+      // Tetap pakai data statis kalau API tidak bisa diakses.
+    })
+})
 </script>
 
 <template>

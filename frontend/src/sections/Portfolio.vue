@@ -2,9 +2,11 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import gsap from 'gsap'
-import { projects } from '@/data/projects'
+import { projects as staticProjects } from '@/data/projects'
+import { loadProjects, type PublicProject } from '@/lib/publicContent'
 
 const router = useRouter()
+const projects = ref<PublicProject[]>([...staticProjects])
 
 const activeIndex = ref<number | null>(null)
 const hoverImg = ref<HTMLElement | null>(null)
@@ -14,7 +16,7 @@ let mouseY = 0
 let currentX = 0
 let currentY = 0
 
-const openDetail = (project: typeof projects[0]) => {
+const openDetail = (project: PublicProject) => {
   router.push(`/projects/${project.slug}`)
 }
 
@@ -37,6 +39,15 @@ onMounted(() => {
       })
     }
   })
+
+  void loadProjects()
+    .then((items) => {
+      projects.value = items
+      activeIndex.value = null
+    })
+    .catch(() => {
+      // Tetap pakai data statis kalau API tidak bisa diakses.
+    })
 })
 
 onUnmounted(() => {

@@ -19,7 +19,7 @@ implementasi backend.
 │   │   ├── sections/         # section halaman Home
 │   │   ├── views/            # halaman route
 │   │   ├── router/           # vue-router
-│   │   ├── data/             # data statis sementara
+│   │   ├── data/             # fallback data statis
 │   │   └── lib/              # typed API client
 │   ├── public/
 │   └── vercel.json           # SPA rewrite
@@ -117,17 +117,22 @@ Vercel otomatis memakai backend tersebut.
 
 Setelah backend punya domain, tambahkan domain frontend ke `CORS_ORIGINS`.
 
-## Catatan migrasi data
+## Integrasi konten publik
 
-Halaman frontend saat ini masih memakai data statis di `frontend/src/data/`.
-Typed API client sudah tersedia di `frontend/src/lib/api.ts` dan siap dipakai
-untuk migrasi bertahap ke backend, misalnya:
+Halaman publik (projects, buildings, experiences, awards, about, hero, dan
+contact) mengambil data dari API lewat helper di
+`frontend/src/lib/publicContent.ts`. Data statis di `frontend/src/data/` tetap
+disimpan sebagai fallback, sehingga website masih tampil normal kalau API
+sedang tidak bisa diakses.
 
 ```ts
-import { api } from '@/lib/api'
+import { loadProjects } from '@/lib/publicContent'
 
-const { data: projects } = await api.listProjects({ featured: true })
+const projects = await loadProjects()
 ```
+
+Kalau backend mengembalikan data kosong, halaman akan menampilkan kosong
+(mengikuti isi database). Fallback statis hanya dipakai saat request gagal.
 
 ## Dokumentasi
 

@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import Magnetic from '../components/Magnetic.vue'
+import { loadProfile } from '@/lib/publicContent'
+import type { SocialLink } from '@/lib/types'
 
-const socialLinks = [
+const staticSocialLinks: SocialLink[] = [
   { name: 'Website', url: 'https://hikkammm.my.id' },
   { name: 'Concern Dev', url: 'https://concern.web.id' },
   { name: 'Instagram', url: 'https://instagram.com/hikkammm_' },
@@ -11,6 +13,10 @@ const socialLinks = [
   { name: 'GitHub', url: 'https://github.com/ululhikam' },
   { name: 'WhatsApp', url: 'https://wa.me/6285211435617' }
 ]
+
+const socialLinks = ref<SocialLink[]>(staticSocialLinks)
+const email = ref('cemengsableng@gmail.com')
+const location = ref('Yogyakarta')
 
 const navLinks = [
   { name: 'About', url: '/#about' },
@@ -35,6 +41,22 @@ onMounted(() => {
       second: '2-digit'
     }) + ' WIB'
   }, 1000)
+
+  void loadProfile()
+    .then((profile) => {
+      socialLinks.value = profile.socials
+
+      if (profile.email) {
+        email.value = profile.email
+      }
+
+      if (profile.location) {
+        location.value = profile.location
+      }
+    })
+    .catch(() => {
+      // Tetap pakai data kontak statis kalau API tidak bisa diakses.
+    })
 })
 
 onUnmounted(() => {
@@ -59,8 +81,8 @@ onUnmounted(() => {
         </h2>
         
         <Magnetic>
-          <a href="mailto:cemengsableng@gmail.com" class="group inline-flex items-center justify-center gap-4 bg-white text-black font-heading text-lg md:text-2xl uppercase px-10 py-5 rounded-full hover:bg-gray-200 transition-all duration-300 hover:scale-105 active:scale-95">
-            <span>cemengsableng@gmail.com</span>
+          <a :href="`mailto:${email}`" class="group inline-flex items-center justify-center gap-4 bg-white text-black font-heading text-lg md:text-2xl uppercase px-10 py-5 rounded-full hover:bg-gray-200 transition-all duration-300 hover:scale-105 active:scale-95">
+            <span>{{ email }}</span>
             <svg class="w-6 h-6 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
@@ -113,7 +135,7 @@ onUnmounted(() => {
       <div class="flex items-center gap-6 mb-4 md:mb-0">
         <span>© {{ new Date().getFullYear() }}</span>
         <span class="hidden sm:inline-block w-1 h-1 rounded-full bg-gray-600"></span>
-        <span class="hidden sm:inline-block">Yogyakarta, {{ time || 'Loading...' }}</span>
+        <span class="hidden sm:inline-block">{{ location }}, {{ time || 'Loading...' }}</span>
       </div>
     </div>
   </footer>

@@ -1,22 +1,25 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { nextTick, onMounted, ref } from 'vue'
 import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { loadProfile } from '@/lib/publicContent'
 
 const storyWrapper = ref(null)
 const words = ref<HTMLElement[]>([])
 const stickyImg = ref(null)
 const progressLine = ref(null)
 
-const paragraphs = [
+const staticParagraphs = [
   "I'm Ulul Hikam — an Informatics student and software developer based in Indonesia, called Hikam. My primary focus is web development and software engineering: building things that actually work in the real world.",
   "My path started with web applications, then grew into backend development, databases, system architecture, and the fundamentals of software. I care more about understanding why things work than collecting frameworks.",
   "Right now I'm expanding into the data ecosystem — Data Science, Data Engineering, and Data Analytics — and exploring AI, especially Natural Language Processing. Software Development → Data → AI/NLP → Product & Business is the direction I'm heading.",
   "I don't just study. I build — Concern Dev, a software house for websites and digital systems, and Necromancer Occultism, a clothing brand about identity and community. Leadership, events, and project management are part of the journey too."
 ]
 
-onMounted(() => {
-  // Words reveal animation
-  gsap.fromTo(words.value, 
+const paragraphs = ref<string[]>(staticParagraphs)
+
+function animateWords() {
+  gsap.fromTo(words.value,
     { opacity: 0.1 },
     {
       opacity: 1,
@@ -31,7 +34,9 @@ onMounted(() => {
       }
     }
   )
+}
 
+function animateVisuals() {
   // Sticky image parallax
   gsap.fromTo(stickyImg.value,
     { scale: 1.2, filter: 'grayscale(100%) blur(5px)' },
@@ -61,6 +66,26 @@ onMounted(() => {
       }
     }
   )
+}
+
+onMounted(async () => {
+  animateWords()
+  animateVisuals()
+
+  try {
+    const profile = await loadProfile()
+    const bio = profile.bio.map((paragraph) => paragraph.trim()).filter(Boolean)
+
+    if (bio.length > 0) {
+      words.value = []
+      paragraphs.value = bio
+      await nextTick()
+      animateWords()
+      ScrollTrigger.refresh()
+    }
+  } catch {
+    // Tetap pakai cerita statis kalau API tidak bisa diakses.
+  }
 })
 </script>
 <template>
